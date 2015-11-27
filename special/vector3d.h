@@ -1,15 +1,15 @@
 /****************************  vector3d.h   ***********************************
 | Author:        Agner Fog
 | Date created:  2012-08-01
-* Last modified: 2014-10-23
-* Version:       1.14
+| Last modified: 2014-10-23
+| Version:       1.14
 | Project:       vector classes
 | Description:
 | Classes for 3-dimensional vectors
 | Vec3f:      A vector of 3 single precision floats
 | Vec3d:      A vector of 3 double precision floats
 |
-| (c) Copyright 2012 GNU General Public License http://www.gnu.org/licenses
+| (c) Copyright 2015 GNU General Public License http://www.gnu.org/licenses
 \*****************************************************************************/
 
 #ifndef VECTOR3D_H

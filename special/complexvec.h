@@ -1,8 +1,8 @@
 /***************************  complexvec.h   **********************************
 | Author:        Agner Fog
 | Date created:  2012-07-24
-* Last modified: 2013-10-04
-* Version:       1.10
+| Last modified: 2015-11-07
+| Version:       1.19
 | Project:       vector classes
 | Description:
 | Classes for complex number math:
@@ -12,7 +12,7 @@
 | Complex2d:  One complex number consisting of two double precision floats
 | Complex4d:  A vector of 2 complex numbers made from 4 double precision floats
 |
-| (c) Copyright 2012 GNU General Public License http://www.gnu.org/licenses
+| (c) Copyright 2015 GNU General Public License http://www.gnu.org/licenses
 \*****************************************************************************/
 
 // The Comples classes do not inherit from the corresponding vector classes
@@ -320,7 +320,7 @@ static inline Complex2f sqrt(Complex2f const & a) {
     __m128 t3  = _mm_add_ps(t1,t2);           // pairwise horizontal sum
     __m128 t4  = _mm_sqrt_ps(t3);             // n = sqrt(r*r+i*i)
     __m128 t5  = _mm_shuffle_ps(a,a,0xA0);    // copy real part of a
-    __m128 sbithi = _mm_castsi128_ps(constant4i<0,0x80000000,0,0x80000000>());  // 0.0, -0.0, 0.0, -0.0
+    __m128 sbithi = _mm_castsi128_ps(constant4i<0,(int32_t)0x80000000,0,(int32_t)0x80000000>());  // 0.0, -0.0, 0.0, -0.0
     __m128 t6  = _mm_xor_ps(t5, sbithi);      // r, -r
     __m128 t7  = _mm_add_ps(t4,t6);           // n+r, n-r
     __m128 t8  = _mm_sqrt_ps(t7);             // sqrt(n+r), sqrt(n-r)
@@ -616,7 +616,7 @@ static inline Complex4f sqrt(Complex4f const & a) {
     __m128 t3  = _mm_add_ps(t1,t2);           // pairwise horizontal sum
     __m128 t4  = _mm_sqrt_ps(t3);             // n = sqrt(r*r+i*i)
     __m128 t5  = _mm_shuffle_ps(a,a,0xA0);    // copy real part of a
-    __m128 sbithi = _mm_castsi128_ps(constant4i<0,0x80000000,0,0x80000000>());  // 0.0, -0.0, 0.0, -0.0
+    __m128 sbithi = _mm_castsi128_ps(constant4i<0,(int32_t)0x80000000,0,(int32_t)0x80000000>());  // 0.0, -0.0, 0.0, -0.0
     __m128 t6  = _mm_xor_ps(t5, sbithi);      // r, -r
     __m128 t7  = _mm_add_ps(t4,t6);           // n+r, n-r
     __m128 t8  = _mm_sqrt_ps(t7);             // sqrt(n+r), sqrt(n-r)
@@ -947,7 +947,7 @@ static inline Complex8f sqrt(Complex8f const & a) {
     __m256 t3  = _mm256_add_ps(t1,t2);           // pairwise horizontal sum
     __m256 t4  = _mm256_sqrt_ps(t3);             // n = sqrt(r*r+i*i)
     __m256 t5  = _mm256_shuffle_ps(a,a,0xA0);    // copy real part of a
-    __m256 sbithi = constant8f<0,0x80000000,0,0x80000000,0,0x80000000,0,0x80000000> ();
+    __m256 sbithi = constant8f<0,(int32_t)0x80000000,0,(int32_t)0x80000000,0,(int32_t)0x80000000,0,(int32_t)0x80000000> ();
     __m256 t6  = _mm256_xor_ps(t5, sbithi);      // r, -r
     __m256 t7  = _mm256_add_ps(t4,t6);           // n+r, n-r
     __m256 t8  = _mm256_sqrt_ps(t7);             // sqrt(n+r), sqrt(n-r)
@@ -1230,7 +1230,7 @@ static inline Complex2d sqrt(Complex2d const & a) {
     __m128d t3  = _mm_add_pd(t1,t2);           // pairwise horizontal sum
     __m128d t4  = _mm_sqrt_pd(t3);             // n = sqrt(r*r+i*i)
     __m128d t5  = _mm_shuffle_pd(a,a,0);       // copy real part of a
-    __m128d sbithi = _mm_castsi128_pd(constant4i<0,0,0,0x80000000>());  // 0.0, -0.0
+    __m128d sbithi = _mm_castsi128_pd(constant4i<0,0,0,(int32_t)0x80000000>());  // 0.0, -0.0
     __m128d t6  = _mm_xor_pd(t5, sbithi);      // r, -r
     __m128d t7  = _mm_add_pd(t4,t6);           // n+r, n-r
     __m128d t8  = _mm_sqrt_pd(t7);             // sqrt(n+r), sqrt(n-r)
@@ -1545,7 +1545,7 @@ static inline Complex4d sqrt(Complex4d const & a) {
     __m256d t3  = _mm256_add_pd(t1,t2);           // pairwise horizontal sum
     __m256d t4  = _mm256_sqrt_pd(t3);             // n = sqrt(r*r+i*i)
     __m256d t5  = _mm256_shuffle_pd(a,a,0);       // copy real part of a
-    __m256d sbithi = _mm256_castps_pd (constant8f<0,0,0,0x80000000,0,0,0,0x80000000>()); // (0.,-0.,0.,-0.)
+    __m256d sbithi = _mm256_castps_pd (constant8f<0,0,0,(int32_t)0x80000000,0,0,0,(int32_t)0x80000000>()); // (0.,-0.,0.,-0.)
     __m256d t6  = _mm256_xor_pd(t5, sbithi);      // r, -r
     __m256d t7  = _mm256_add_pd(t4,t6);           // n+r, n-r
     __m256d t8  = _mm256_sqrt_pd(t7);             // sqrt(n+r), sqrt(n-r)

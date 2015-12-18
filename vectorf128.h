@@ -1,7 +1,7 @@
 /****************************  vectorf128.h   *******************************
 * Author:        Agner Fog
 * Date created:  2012-05-30
-* Last modified: 2015-12-04
+* Last modified: 2015-12-05
 * Version:       1.20
 * Project:       vector classes
 * Description:
@@ -35,15 +35,13 @@
 #ifndef VECTORF128_H
 #define VECTORF128_H
 
-#include "vectori128.h"  // Define integer vectors
-
-#if defined _MSC_VER && _MSC_VER >= 1800   /* or 1900? */
+#if defined _MSC_VER && _MSC_VER >= 1800
 // solve problem with ambiguous overloading of pow function in Microsoft math.h:
+// make sure math.h is included first rather than last
 #include <math.h>
-static inline float pow(float x, float y) {
-    return (float)pow((double)x, (double)y);
-}
 #endif 
+
+#include "vectori128.h"  // Define integer vectors
 
 
 /*****************************************************************************

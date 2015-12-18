@@ -74,8 +74,10 @@
 * The 512 bit vector functions are available only if MAX_VECTOR_SIZE >= 512.
 *
 * For detailed instructions, see VectorClass.pdf
-* For theoretical explanation, see the article: "Pseudo-Random Number Generators
-* for Vector Processors and Multicore processors". www.agner.org/random/theory
+* For theoretical explanation, see the article: 
+* Fog, Agner. “Pseudo-Random Number Generators for Vector Processors and Multicore Processors.”
+* Journal of Modern Applied Statistical Methods 14, no. 1 (2015): article 23.
+* http://digitalcommons.wayne.edu/jmasm/vol14/iss1/23/
 *
 * (c) Copyright 2014 GNU General Public License www.gnu.org/licenses
 ******************************************************************************/

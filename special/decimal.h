@@ -1,20 +1,24 @@
 /***************************  decimal.h   *************************************
-| Author:        Agner Fog
-| Date created:  2012-07-08
-* Last modified: 2013-10-04
-* Version:       1.10
-| Project:       vector classes
-| Description:
-| Functions for conversion between binary number vectors and Binary Coded 
-| Decimal (BCD), decimal ASCII, hexadecimal ASCII, etc.
-|
-| This file should only be included if it is needed - it takes a long time to compile
-|
-| (c) Copyright 2012 GNU General Public License http://www.gnu.org/licenses
-\*****************************************************************************/
+* Author:        Agner Fog
+* Date created:  2012-07-08
+* Last modified: 2016-05-02
+* Version:       1.22
+* Project:       vector classes
+* Description:
+* Functions for conversion between binary number vectors and Binary Coded 
+* Decimal (BCD), decimal ASCII, hexadecimal ASCII, etc.
+*
+* This file should only be included if it is needed - it takes a long time to compile
+*
+* (c) Copyright 2012-2016 GNU General Public License http://www.gnu.org/licenses
+******************************************************************************/
 
 
 #include "vectorclass.h"
+
+#ifdef VCL_NAMESPACE
+namespace VCL_NAMESPACE {
+#endif
 
 /*****************************************************************************
 *
@@ -213,17 +217,17 @@ static int bin2ascii (Vec4i const & a, char * string, int fieldlen = 8, int numd
         Vec32c  dec        = Vec32c(declo,dechi);               // all digits, big endian digit order
         Vec32c  ascii      = dec + 0x30;                        // add '0' to get ascii digits
         // find most significant nonzero digit, or digit 0 if all zero
-        Vec32c decnz = (dec != 0) | Vec32c(0,0,0,0,0,0,0,-1,0,0,0,0,0,0,0,-1,0,0,0,0,0,0,0,-1,0,0,0,0,0,0,0,-1);
+        Vec32c decnz = Vec32c(dec != 0) | Vec32c(0,0,0,0,0,0,0,-1,0,0,0,0,0,0,0,-1,0,0,0,0,0,0,0,-1,0,0,0,0,0,0,0,-1);
         Vec4q  scan  = Vec4q(decnz);
         scan |= scan << 8; scan |= scan << 16; scan |= scan << 32;
         // insert spaces to the left of most significant nonzero digit
-        ascii = select(Vec32c(scan), ascii, Vec32c(' '));
+        ascii = select(Vec32cb(scan), ascii, Vec32c(' '));
         if (signd) {
             Vec32c minuspos = Vec32c(andnot(scan >> 8, scan)) & Vec32c(signe);  // position of minus sign
-            ascii  = select(minuspos, Vec32c('-'), ascii);      // insert minus sign
+            ascii  = select(Vec32cb(minuspos), Vec32c('-'), ascii);      // insert minus sign
         }
         // insert overflow indicator
-        ascii = select(Vec32c(ovfle), Vec32c(ovfl), ascii);
+        ascii = select(Vec32cb(ovfle), Vec32c(ovfl), ascii);
         const int d = -256;  // means don't care in permute functions
         if (separator) {
             numwrit = (fieldlen + 1) * numdat - 1;
@@ -362,12 +366,12 @@ static int bin2ascii (Vec4i const & a, char * string, int fieldlen = 8, int numd
             Vec2q  scan  = Vec2q(decnz);
             scan |= scan << 8; scan |= scan << 16; scan |= scan << 32;
             // insert spaces to the left of most significant nonzero digit
-            ascii = select(Vec16c(scan), ascii, Vec16c(' '));
+            ascii = select(Vec16cb(scan), ascii, Vec16c(' '));
             // count digits
             int charmask = _mm_movemask_epi8(scan) ^ 0xFFFF;
             int numchars = 15 - bit_scan_reverse(charmask);
             if (signlist[i]) {
-                Vec16c minuspos = Vec16c(andnot(scan >> 8, scan)); // position of minus sign
+                Vec16cb minuspos = Vec16cb(andnot(scan >> 8, scan)); // position of minus sign
                 ascii  = select(minuspos, Vec16c('-'), ascii);     // insert minus sign
                 numchars++;
             }
@@ -486,17 +490,17 @@ static int bin2ascii (Vec8s const & a, char * string, int fieldlen = 4, int numd
         Vec32c  dec        = Vec32c(declo,dechi);               // all digits, big endian digit order
         Vec32c  ascii      = dec + 0x30;                        // add '0' to get ascii digits
         // find most significant nonzero digit, or digit 0 if all zero
-        Vec32c decnz = (dec != 0) | Vec32c(0,0,0,-1,0,0,0,-1,0,0,0,-1,0,0,0,-1,0,0,0,-1,0,0,0,-1,0,0,0,-1,0,0,0,-1);
+        Vec32c decnz = Vec32c(dec != 0) | Vec32c(0,0,0,-1,0,0,0,-1,0,0,0,-1,0,0,0,-1,0,0,0,-1,0,0,0,-1,0,0,0,-1,0,0,0,-1);
         Vec8i  scan  = Vec8i(decnz);
         scan |= scan << 8; scan |= scan << 16;
         // insert spaces to the left of most significant nonzero digit
-        ascii = select(Vec32c(scan), ascii, Vec32c(' '));
+        ascii = select(Vec32cb(scan), ascii, Vec32c(' '));
         if (signd) {
             Vec32c minuspos = Vec32c(andnot(scan >> 8, scan)) & Vec32c(signe);  // position of minus sign
-            ascii  = select(minuspos, Vec32c('-'), ascii);      // insert minus sign
+            ascii  = select((Vec32cb)minuspos, Vec32c('-'), ascii);      // insert minus sign
         }
         // insert overflow indicator
-        ascii = select(Vec32c(ovfle), Vec32c(ovfl), ascii);
+        ascii = select(Vec32cb(ovfle), Vec32c(ovfl), ascii);
         const int d = -256;  // means don't care in permute functions
         if (separator) {
             // write output fields with separator
@@ -689,17 +693,17 @@ static int bin2ascii (Vec16c const & a, char * string, int fieldlen = 2, int num
         Vec32c  dec        = Vec32c(declo,dechi);               // all digits, big endian digit order
         Vec32c  ascii      = dec + 0x30;                        // add '0' to get ascii digits
         // find most significant nonzero digit, or digit 0 if all zero
-        Vec32c  decnz = (dec != 0) | Vec32c(0,-1,0,-1,0,-1,0,-1,0,-1,0,-1,0,-1,0,-1,0,-1,0,-1,0,-1,0,-1,0,-1,0,-1,0,-1,0,-1);
+        Vec32c  decnz = Vec32c(dec != 0) | Vec32c(0,-1,0,-1,0,-1,0,-1,0,-1,0,-1,0,-1,0,-1,0,-1,0,-1,0,-1,0,-1,0,-1,0,-1,0,-1,0,-1);
         Vec16s  scan  = Vec16s(decnz);
         scan |= scan << 8;
         // insert spaces to the left of most significant nonzero digit
-        ascii = select(Vec32c(scan), ascii, Vec32c(' '));
+        ascii = select(Vec32cb(scan), ascii, Vec32c(' '));
         if (signd) {
-            Vec32c minuspos = Vec32c(Vec16us(signe) >> 8);      // position of minus sign
+            Vec32cb minuspos = Vec32cb(Vec16us(signe) >> 8);      // position of minus sign
             ascii  = select(minuspos, Vec32c('-'), ascii);      // insert minus sign
         }
         // insert overflow indicator
-        ascii = select(Vec32c(ovfle), Vec32c(ovfl), ascii);
+        ascii = select(Vec32cb(ovfle), Vec32c(ovfl), ascii);
         const int d = -256;  // means don't care in permute functions
         if (separator) {
             // write output fields with separator
@@ -850,7 +854,7 @@ static int bin2hex_ascii (Vec2q const & a, char * string, int numdat = 2, char s
     Vec16c  dechi  = blend16c<31,15,30,14,29,13,28,12,27,11,26,10,25, 9,24, 8>(nibb0, nibb1);
     Vec32c  hex    = Vec32c(declo,dechi);                       // all digits, big endian digit order
     Vec32c  ascii  = hex + 0x30;                                // add '0' to get ascii digits 0 - 9
-            ascii += (ascii > '9') & 7;                         // fix A - F
+            ascii += Vec32c(ascii > '9') & 7;                         // fix A - F
     // store first number
     ascii.get_low().store(string);  string += 16;
     if (numdat > 1) {
@@ -902,7 +906,7 @@ static int bin2hex_ascii (Vec4i const & a, char * string, int numdat = 4, char s
     Vec16c  dechi  = blend16c<27,11,26,10,25, 9,24, 8, 31,15,30,14,29,13,28,12>(nibb0, nibb1);
     Vec32c  hex    = Vec32c(declo,dechi);                       // all digits, big endian digit order
     Vec32c  ascii  = hex + 0x30;                                // add '0' to get ascii digits 0 - 9
-            ascii += (ascii > '9') & 7;                         // fix A - F
+            ascii += Vec32c(ascii > '9') & 7;                   // fix A - F
     if (separator) {
         const int d = -256;                                     // don't care
         numwrit = 9 * numdat - 1;
@@ -965,7 +969,7 @@ static int bin2hex_ascii (Vec8s const & a, char * string, int numdat = 8, char s
     Vec16c  dechi  = blend16c<25,9,24,8,  27,11,26,10, 29,13,28,12, 31,15,30,14>(nibb0, nibb1);
     Vec32c  hex    = Vec32c(declo,dechi);                       // all digits, big endian digit order
     Vec32c  ascii  = hex + 0x30;                                // add '0' to get ascii digits 0 - 9
-            ascii += (ascii > '9') & 7;                         // fix A - F
+            ascii += Vec32c(ascii > '9') & 7;                   // fix A - F
     if (separator) {
         const int d = -256;                                     // don't care
         numwrit = 5 * numdat - 1;
@@ -1028,7 +1032,7 @@ static int bin2hex_ascii (Vec16c const & a, char * string, int numdat = 16, char
     Vec16c  dechi  = blend16c<24,8, 25,9, 26,10, 27,11, 28,12, 29,13, 30,14, 31,15>(nibb0, nibb1);
     Vec32c  hex    = Vec32c(declo,dechi);                       // all digits, big endian digit order
     Vec32c  ascii  = hex + 0x30;                                // add '0' to get ascii digits 0 - 9
-            ascii += (ascii > '9') & 7;                         // fix A - F
+            ascii += Vec32c(ascii > '9') & 7;                   // fix A - F
     if (separator) {
         const int d = -256;                                     // don't care
         numwrit = 3 * numdat - 1;
@@ -1100,7 +1104,7 @@ static Vec4i ascii2bin(Vec32c const & string) {
     // Check that we have at least one digit
     syntaxerr |= Vec4q(digitpos) == 0;
     // Check that we have only spaces to the left of digits
-    syntaxerr |= Vec4q((string1 == ' ' - '0') | digitpos) != -1L;
+    syntaxerr |= Vec4q(Vec32c(string1 == ' ' - '0') | digitpos) != -1L;
 #if 1
     // Check that we have no more than one minus sign
     // (this error is so rare that you may remove this check)
@@ -1130,9 +1134,12 @@ static Vec4i ascii2bin(Vec32c const & string) {
     // Apply signs
     Vec4i c  = (b ^ signs) - signs;
     // Compress syntaxerr
-    Vec4i err = compress(syntaxerr.get_low(), syntaxerr.get_high());
+    Vec4ib err = (Vec4ib)compress(syntaxerr.get_low(), syntaxerr.get_high());
     // Insert 0x80000000 for syntax error
     Vec4i d  = select(err, Vec4i(0x80000000), c);
     // Return
     return d;
 }
+#ifdef VCL_NAMESPACE
+}
+#endif

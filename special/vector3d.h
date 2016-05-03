@@ -1,23 +1,26 @@
 /****************************  vector3d.h   ***********************************
 | Author:        Agner Fog
 | Date created:  2012-08-01
-| Last modified: 2014-10-23
-| Version:       1.14
+* Last modified: 2016-04-26
+* Version:       1.22
 | Project:       vector classes
 | Description:
 | Classes for 3-dimensional vectors
 | Vec3f:      A vector of 3 single precision floats
 | Vec3d:      A vector of 3 double precision floats
 |
-| (c) Copyright 2015 GNU General Public License http://www.gnu.org/licenses
+| (c) Copyright 2012-2016 GNU General Public License http://www.gnu.org/licenses
 \*****************************************************************************/
 
 #ifndef VECTOR3D_H
-#define VECTOR3D_H  114
+#define VECTOR3D_H  122
 
 #include "vectorclass.h"
 #include <math.h>          // define math library functions
 
+#ifdef VCL_NAMESPACE
+namespace VCL_NAMESPACE {
+#endif
 
 /*****************************************************************************
 *
@@ -479,7 +482,7 @@ static inline double dot_product (Vec3d const & a, Vec3d const & b) {
 
 // function vector_length
 static inline double vector_length (Vec3d const & a) {
-    return sqrt(dot_product(a,a));
+    return ::sqrt(dot_product(a,a));
 }
 
 // function normalize_vector
@@ -527,5 +530,9 @@ static inline Vec3d to_double (Vec3f const & a) {
     return Vec3d(Vec4d(extend_low(a), extend_high(a)));
 #endif
 }
+
+#ifdef VCL_NAMESPACE
+}
+#endif
 
 #endif  // VECTOR3D_H

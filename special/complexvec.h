@@ -1,19 +1,19 @@
 /***************************  complexvec.h   **********************************
-| Author:        Agner Fog
-| Date created:  2012-07-24
-| Last modified: 2015-11-07
-| Version:       1.19
-| Project:       vector classes
-| Description:
-| Classes for complex number math:
-| Complex2f:  One complex number consisting of two single precision floats
-| Complex4f:  A vector of 2 complex numbers made from 4 single precision floats
-| Complex8f:  A vector of 4 complex numbers made from 8 single precision floats
-| Complex2d:  One complex number consisting of two double precision floats
-| Complex4d:  A vector of 2 complex numbers made from 4 double precision floats
-|
-| (c) Copyright 2015 GNU General Public License http://www.gnu.org/licenses
-\*****************************************************************************/
+* Author:        Agner Fog
+* Date created:  2012-07-24
+* Last modified: 2016-05-02
+* Version:       1.22
+* Project:       vector classes
+* Description:
+* Classes for complex number math:
+* Complex2f:  One complex number consisting of two single precision floats
+* Complex4f:  A vector of 2 complex numbers made from 4 single precision floats
+* Complex8f:  A vector of 4 complex numbers made from 8 single precision floats
+* Complex2d:  One complex number consisting of two double precision floats
+* Complex4d:  A vector of 2 complex numbers made from 4 double precision floats
+*
+* (c) Copyright 2012-2016 GNU General Public License http://www.gnu.org/licenses
+******************************************************************************/
 
 // The Comples classes do not inherit from the corresponding vector classes
 // because that would lead to undesired implicit conversions when calling
@@ -24,11 +24,14 @@
 // these classes is still possible.
 
 #ifndef COMPLEXVEC_H
-#define COMPLEXVEC_H  102
+#define COMPLEXVEC_H  122
 
 #include "vectorclass.h"
 #include <math.h>          // define math library functions
 
+#ifdef VCL_NAMESPACE
+namespace VCL_NAMESPACE {
+#endif
 
 /*****************************************************************************
 *
@@ -1220,7 +1223,7 @@ static inline Complex2d & operator /= (Complex2d & a, double b) {
 // abs(a,b) = sqrt(a*a+b*b);
 static inline double abs(Complex2d const & a) {
     Vec2d t = Vec2d(a);
-    return sqrt(horizontal_add(t*t));
+    return ::sqrt(horizontal_add(t*t));
 }
 
 // function sqrt: square root
@@ -1661,8 +1664,8 @@ static inline Complex8f cexp (Complex8f const & a) {
 static inline Complex2d cexp (Complex2d const & a) {
     double xx[2];
     a.store(xx);
-    Complex2d z(cos(xx[1]), sin(xx[1]));
-    return z * exp(xx[0]);
+    Complex2d z(::cos(xx[1]), ::sin(xx[1]));
+    return z * ::exp(xx[0]);
 }
 
 static inline Complex4d cexp (Complex4d const & a) {
@@ -1670,5 +1673,9 @@ static inline Complex4d cexp (Complex4d const & a) {
 }
 
 #endif  // VECTORMATH_H
+
+#ifdef VCL_NAMESPACE
+}
+#endif
 
 #endif  // COMPLEXVEC_H

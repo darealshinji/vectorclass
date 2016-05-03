@@ -1,25 +1,27 @@
 /***************************  quaternion.h   *********************************
-| Author:        Agner Fog
-| Date created:  2012-08-01
-* Last modified: 2013-10-04
-* Version:       1.10
-| Project:       vector classes
-| Description:
-| Quaternions are used for mathematics and 3-D geometry.
-| Classes for quaternions:
-| Quaternion4f:  One quaternion consisting of four single precision floats
-| Quaternion4d:  One quaternion consisting of four double precision floats
-|
-| (c) Copyright 2012 GNU General Public License http://www.gnu.org/licenses
-\*****************************************************************************/
+* Author:        Agner Fog
+* Date created:  2012-08-01
+* Last modified: 2016-05-02
+* Version:       1.22
+* Project:       vector classes
+* Description:
+* Quaternions are used for mathematics and 3-D geometry.
+* Classes for quaternions:
+* Quaternion4f:  One quaternion consisting of four single precision floats
+* Quaternion4d:  One quaternion consisting of four double precision floats
+*
+* (c) Copyright 2012-2016 GNU General Public License http://www.gnu.org/licenses
+******************************************************************************/
 
 
 #ifndef QUATERNION_H
-#define QUATERNION_H  102
+#define QUATERNION_H  122
 
 #include "complexvec.h"  // complex numbers required
 
-
+#ifdef VCL_NAMESPACE
+namespace VCL_NAMESPACE {
+#endif
 
 /*****************************************************************************
 *
@@ -582,7 +584,7 @@ static inline Quaternion4d & operator /= (Quaternion4d & a, double b) {
 static inline Quaternion4d abs(Quaternion4d const & a) {
     Vec4d sq  = a.to_vector() * a.to_vector();
     double nsq = horizontal_add(sq);
-    return sqrt(nsq);
+    return ::sqrt(nsq);
 }
 
 // function select
@@ -600,5 +602,9 @@ static inline Quaternion4f to_single (Quaternion4d const & a) {
 static inline Quaternion4d to_double (Quaternion4f const & a) {
     return Quaternion4d(Vec4d(to_double(Complex4f(a.to_vector()))));
 }
+
+#ifdef VCL_NAMESPACE
+}
+#endif
 
 #endif  // QUATERNION_H

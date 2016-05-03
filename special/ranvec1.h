@@ -1,8 +1,8 @@
 /****************************  ranvec1.h   ********************************
 * Author:        Agner Fog
 * Date created:  2014-09-09
-* Last modified: 2014-10-16
-* Version:       1.15
+* Last modified: 2016-04-26
+* Version:       1.22
 * Project:       vector classes
 * Description:
 * Header file defining pseudo random number generators with vector output.
@@ -77,13 +77,16 @@
 * For theoretical explanation, see the article: "Pseudo-Random Number Generators
 * for Vector Processors and Multicore processors". www.agner.org/random/theory
 *
-* (c) Copyright 2014 GNU General Public License www.gnu.org/licenses
+* (c) Copyright 2014-2016 GNU General Public License www.gnu.org/licenses
 ******************************************************************************/
 #ifndef RANVEC1_H
-#define RANVEC1_H  115
+#define RANVEC1_H  122
 
 #include "vectorclass.h"
 
+#ifdef VCL_NAMESPACE
+namespace VCL_NAMESPACE {
+#endif
 
 /******************************************************************************
         Ranvec1base: Base class for combined random number generator
@@ -318,5 +321,8 @@ protected:
    uint32_t randomixLimit;                       // Last rejection limit for irandomx function
 };
 
+#ifdef VCL_NAMESPACE
+}
+#endif
 
 #endif  // RANVEC1_H

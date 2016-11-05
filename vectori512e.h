@@ -1,8 +1,8 @@
 /****************************  vectori512e.h   *******************************
 * Author:        Agner Fog
 * Date created:  2014-07-23
-* Last modified: 2016-04-26
-* Version:       1.22
+* Last modified: 2016-10-31
+* Version:       1.24
 * Project:       vector classes
 * Description:
 * Header file defining integer vector classes as interface to intrinsic 
@@ -1574,7 +1574,7 @@ public:
     // Constructor to build from all elements:
     Vec8uq(uint64_t i0, uint64_t i1, uint64_t i2, uint64_t i3, uint64_t i4, uint64_t i5, uint64_t i6, uint64_t i7) {
         z0 = Vec4q(i0, i1, i2, i3);
-        z0 = Vec4q(i4, i5, i6, i7);
+        z1 = Vec4q(i4, i5, i6, i7);
     }
     // Constructor to build from two Vec4uq:
     Vec8uq(Vec4uq const & a0, Vec4uq const & a1) {

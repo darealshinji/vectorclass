@@ -1,6 +1,9 @@
 change log for vectorclass.zip
 ------------------------------
 
+2016-10-31 version 1.24
+  * fix bug in Vec8uq constructor in vectori512e.h
+
 2016-09-27 version 1.23
   * temporary fix of a problem in Clang version 3.9 inserted in vectorf128.h
 

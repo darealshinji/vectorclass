@@ -1,8 +1,8 @@
 /****************************  ranvec1.h   ********************************
 * Author:        Agner Fog
 * Date created:  2014-09-09
-* Last modified: 2016-04-26
-* Version:       1.22
+* Last modified: 2016-11-25
+* Version:       1.25
 * Project:       vector classes
 * Description:
 * Header file defining pseudo random number generators with vector output.

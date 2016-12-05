@@ -1,8 +1,8 @@
 /****************************  ranvec1.cpp   **********************************
 * Author:        Agner Fog
 * Date created:  2014-09-09
-* Last modified: 2016-04-26
-* Version:       1.22
+* Last modified: 2016-11-25
+* Version:       1.25
 * Project:       vector classes
 * Description:
 * Header file defining pseudo random number generators with vector output.
@@ -154,9 +154,10 @@ void Ranvec1base::initByArray(int32_t const seeds[], int numSeeds) {
         for (i = 0; i < 4 * 16 / sizeof(next1()); i++)  next1();
         // Check for illegal seeds
         for (i = 0; i < sizeof(buffer1)/sizeof(buffer1[0]); i+=2) {
-            static const uint32_t factorsm1[8] = {
-                mwcfac0-1, mwcfac1-1, mwcfac2-1, mwcfac3-1, mwcfac4-1, mwcfac5-1, mwcfac6-1, mwcfac7-1};
-            if ((buffer1[i]==0 && buffer1[i+1]==0) || (buffer1[i]==0xFFFFFFFF && buffer1[i+1]==factorsm1[i/2])) {
+            const uint32_t factorsm1[8] = {
+                uint32_t(mwcfac0-1), uint32_t(mwcfac1-1), uint32_t(mwcfac2-1), uint32_t(mwcfac3-1), 
+                uint32_t(mwcfac4-1), uint32_t(mwcfac5-1), uint32_t(mwcfac6-1), uint32_t(mwcfac7-1)};
+            if ((buffer1[i]==0 && buffer1[i+1]==0) || (buffer1[i]==0xFFFFFFFF && buffer1[i+1]==(uint32_t)factorsm1[i/2])) {
                 // seeds (0,0) and (-1,factor-1) are avoided because they will reproduce themselves
                 buffer1[i]   = (buffer2[i+16] & -4) | 1;
                 buffer1[i+1] = buffer2[i+17];
@@ -236,7 +237,7 @@ void Ranvec1base::next(uint32_t * dest) {
 
 // Initialize with seed
 void Ranvec1base::initMWC(int seed) {
-    static const int vectorsize = sizeof(next1());         // Vector size depends on instruction set
+    const int vectorsize = sizeof(next1());         // Vector size depends on instruction set
     int i;
     // Fill buffer with function of seed
     uint32_t tmp = seed;
@@ -257,7 +258,7 @@ void Ranvec1base::initMWC(int seed) {
 #if INSTRSET < 8                                           // SSE2 - AVX: use 128 bit vectors
 Vec4ui Ranvec1base::next1() {                              // Get 128 bits from MWC
     // Factors for multiply-with-carry
-    static const uint32_t factors[16] = {
+    const uint32_t factors[16] = {
         mwcfac0, 0, mwcfac1, 0, mwcfac2, 0, mwcfac3, 0,
         mwcfac4, 0, mwcfac5, 0, mwcfac6, 0, mwcfac7, 0
     };
@@ -279,9 +280,9 @@ Vec4ui Ranvec1base::next1() {                              // Get 128 bits from 
 #elif INSTRSET < 9                                         // AVX2: use 256 bit vectors
 Vec8ui Ranvec1base::next1() {                              // Get 128 bits from MWC
     // Factors for multiply-with-carry
-    static const uint32_t factors[16] = {
-        mwcfac0, 0, mwcfac1, 0, mwcfac2, 0, mwcfac3, 0,
-        mwcfac4, 0, mwcfac5, 0, mwcfac6, 0, mwcfac7, 0
+    const uint32_t factors[16] = {
+        (uint32_t)mwcfac0, 0, (uint32_t)mwcfac1, 0, (uint32_t)mwcfac2, 0, (uint32_t)mwcfac3, 0,
+        (uint32_t)mwcfac4, 0, (uint32_t)mwcfac5, 0, (uint32_t)mwcfac6, 0, (uint32_t)mwcfac7, 0
     };
     Vec8ui x, f;
     Vec4uq y;
@@ -300,7 +301,7 @@ Vec8ui Ranvec1base::next1() {                              // Get 128 bits from 
 #else                                                      // AVX512: use 512 bit vectors
 Vec16ui Ranvec1base::next1() {                             // Get 512 bits from MWC
     // Factors for multiply-with-carry
-    static const uint32_t factors[16] = {
+    const uint32_t factors[16] = {
         mwcfac0, 0, mwcfac1, 0, mwcfac2, 0, mwcfac3, 0,
         mwcfac4, 0, mwcfac5, 0, mwcfac6, 0, mwcfac7, 0
     };
@@ -504,7 +505,7 @@ Vec8ui Ranvec1base::next2() {
     y = x ^ (y >> sh2);
 
     // 4x32 matrix multiplication by table lookup
-    static const uint32_t tbl[16] = {
+    const uint32_t tbl[16] = {
         0, tbl0, tbl1, tbl1 ^ tbl0,
         tbl2, tbl2 ^ tbl0, tbl2 ^ tbl1, tbl2 ^ tbl1 ^ tbl0,
         tbl3, tbl3 ^ tbl0, tbl3 ^ tbl1, tbl3 ^ tbl1 ^ tbl0,
@@ -528,7 +529,7 @@ Vec8ui Ranvec1base::next2() {
     t1 ^= t1 >> 8;
 
     // 4x32 matrix multiplication by table lookup
-    static const uint32_t tempmat[16] = {
+    const uint32_t tempmat[16] = {
         0, temper0, temper1, temper1 ^ temper0,
         temper2, temper2 ^ temper0, temper2 ^ temper1, temper2 ^ temper1 ^ temper0,
         temper3, temper3 ^ temper0, temper3 ^ temper1, temper3 ^ temper1 ^ temper0,
@@ -561,7 +562,7 @@ Vec16ui Ranvec1base::next2() {
     y = x ^ (y >> sh2);
 
     // 4x32 matrix multiplication by table lookup
-    static const uint32_t tbl[16] = {
+    const uint32_t tbl[16] = {
         0, tbl0, tbl1, tbl1 ^ tbl0,
         tbl2, tbl2 ^ tbl0, tbl2 ^ tbl1, tbl2 ^ tbl1 ^ tbl0,
         tbl3, tbl3 ^ tbl0, tbl3 ^ tbl1, tbl3 ^ tbl1 ^ tbl0,
@@ -585,7 +586,7 @@ Vec16ui Ranvec1base::next2() {
     t1 ^= t1 >> 8;
 
     // 4x32 matrix multiplication by table lookup
-    static const uint32_t tempmat[16] = {
+    const uint32_t tempmat[16] = {
         0, temper0, temper1, temper1 ^ temper0,
         temper2, temper2 ^ temper0, temper2 ^ temper1, temper2 ^ temper1 ^ temper0,
         temper3, temper3 ^ temper0, temper3 ^ temper1, temper3 ^ temper1 ^ temper0,
@@ -800,7 +801,7 @@ Vec4i Ranvec1::random4i(int min, int max) {
    if (interval == 0) return ranbits;
    Vec4ui prod_even = mulExtended(ranbits, interval);                          // 64-bit product of even numbered elements
    Vec4ui prod_odd  = mulExtended(shift32Down(ranbits), interval);             // 64-bit product of odd numbered elements
-   static const Vec4ib select_odd(false,true,false,true);                      // Odd elements true
+   const Vec4ib select_odd(false,true,false,true);                             // Odd elements true
    Vec4ui prods     = select(select_odd, prod_odd,shift32Down(prod_even));     // combine high parts of products
    return Vec4i(prods) + Vec4i(min);
 }
@@ -826,7 +827,7 @@ Vec4i Ranvec1::random4ix(int min, int max) {
    }
    Vec4ui prods1;                                                              // Random number * interval
    Vec4ib reject1(true);                                                       // Initial values in prods1 are invalid
-   static const Vec4ib select_odd(false,true,false,true);                      // Odd elements true
+   const Vec4ib select_odd(false,true,false,true);                             // Odd elements true
 
    bool incomplete;                                                            // when not all elements are accepted
    int n = 0;                                                                  // Counter for rejection loop
@@ -910,7 +911,7 @@ Vec8i Ranvec1::random8i(int min, int max) {
    if (interval == 0) return ranbits;                                          // interval overflows
    Vec8ui prod_even = mulExtended(ranbits, interval);                          // 64-bit product of even numbered elements
    Vec8ui prod_odd  = mulExtended(shift32Down(ranbits), interval);             // 64-bit product of odd numbered elements
-   static const Vec8ib select_odd(false,true,false,true,false,true,false,true);// Odd elements true
+   const Vec8ib select_odd(false,true,false,true,false,true,false,true);       // Odd elements true
    Vec8ui prods     = select(select_odd, prod_odd,shift32Down(prod_even));     // combine high parts of products
    return Vec8i(prods) + Vec8i(min);
 }
@@ -937,7 +938,7 @@ Vec8i Ranvec1::random8ix(int min, int max) {
    }
    Vec8ui prods1;                                                              // Random number * interval
    Vec8ib reject1 = true;                                                      // Initial values in prods1 are invalid
-   static const Vec8ib select_odd(false,true,false,true,false,true,false,true);// Odd elements true
+   const Vec8ib select_odd(false,true,false,true,false,true,false,true);       // Odd elements true
    bool incomplete;                                                            // when not all elements are accepted
    int n = 0;                                                                  // Counter for rejection loop
 
@@ -1021,7 +1022,7 @@ Vec16i Ranvec1::random16i(int min, int max) {
    if (interval == 0) return ranbits;
    Vec16ui prod_even = mulExtended(ranbits, interval);                         // 64-bit product of even numbered elements
    Vec16ui prod_odd  = mulExtended(shift32Down(ranbits), interval);            // 64-bit product of odd numbered elements
-   static const Vec16ib select_odd(0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1);           // Odd elements true
+   const Vec16ib select_odd(0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1);                  // Odd elements true
    Vec16ui prods     = select(select_odd, prod_odd,shift32Down(prod_even));    // combine high parts of products
    return Vec16i(prods) + Vec16i(min);
 }
@@ -1048,7 +1049,7 @@ Vec16i Ranvec1::random16ix(int min, int max) {
    }
    Vec16ui prods1;                                                             // Random number * interval
    Vec16ib reject1 = true;                                                     // Initial values in prods1 are invalid
-   static const Vec16ib select_odd(0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1);           // Odd elements true
+   const Vec16ib select_odd(0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1);                  // Odd elements true
    bool incomplete;                                                            // when not all elements are accepted
    int n = 0;                                                                  // Counter for rejection loop
 

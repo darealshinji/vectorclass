@@ -1,8 +1,8 @@
 /***************************  complexvec.h   **********************************
 * Author:        Agner Fog
 * Date created:  2012-07-24
-* Last modified: 2016-05-02
-* Version:       1.22
+* Last modified: 2016-12-21
+* Version:       1.26
 * Project:       vector classes
 * Description:
 * Classes for complex number math:
@@ -24,7 +24,7 @@
 // these classes is still possible.
 
 #ifndef COMPLEXVEC_H
-#define COMPLEXVEC_H  122
+#define COMPLEXVEC_H  126
 
 #include "vectorclass.h"
 #include <math.h>          // define math library functions
@@ -323,7 +323,7 @@ static inline Complex2f sqrt(Complex2f const & a) {
     __m128 t3  = _mm_add_ps(t1,t2);           // pairwise horizontal sum
     __m128 t4  = _mm_sqrt_ps(t3);             // n = sqrt(r*r+i*i)
     __m128 t5  = _mm_shuffle_ps(a,a,0xA0);    // copy real part of a
-    __m128 sbithi = _mm_castsi128_ps(constant4i<0,(int32_t)0x80000000,0,(int32_t)0x80000000>());  // 0.0, -0.0, 0.0, -0.0
+    __m128 sbithi = _mm_castsi128_ps(constant4ui<0,0x80000000,0,0x80000000>());  // 0.0, -0.0, 0.0, -0.0
     __m128 t6  = _mm_xor_ps(t5, sbithi);      // r, -r
     __m128 t7  = _mm_add_ps(t4,t6);           // n+r, n-r
     __m128 t8  = _mm_sqrt_ps(t7);             // sqrt(n+r), sqrt(n-r)
@@ -619,7 +619,7 @@ static inline Complex4f sqrt(Complex4f const & a) {
     __m128 t3  = _mm_add_ps(t1,t2);           // pairwise horizontal sum
     __m128 t4  = _mm_sqrt_ps(t3);             // n = sqrt(r*r+i*i)
     __m128 t5  = _mm_shuffle_ps(a,a,0xA0);    // copy real part of a
-    __m128 sbithi = _mm_castsi128_ps(constant4i<0,(int32_t)0x80000000,0,(int32_t)0x80000000>());  // 0.0, -0.0, 0.0, -0.0
+    __m128 sbithi = _mm_castsi128_ps(constant4ui<0,0x80000000,0,0x80000000>());  // 0.0, -0.0, 0.0, -0.0
     __m128 t6  = _mm_xor_ps(t5, sbithi);      // r, -r
     __m128 t7  = _mm_add_ps(t4,t6);           // n+r, n-r
     __m128 t8  = _mm_sqrt_ps(t7);             // sqrt(n+r), sqrt(n-r)
@@ -1233,7 +1233,7 @@ static inline Complex2d sqrt(Complex2d const & a) {
     __m128d t3  = _mm_add_pd(t1,t2);           // pairwise horizontal sum
     __m128d t4  = _mm_sqrt_pd(t3);             // n = sqrt(r*r+i*i)
     __m128d t5  = _mm_shuffle_pd(a,a,0);       // copy real part of a
-    __m128d sbithi = _mm_castsi128_pd(constant4i<0,0,0,(int32_t)0x80000000>());  // 0.0, -0.0
+    __m128d sbithi = _mm_castsi128_pd(constant4ui<0,0,0,0x80000000>());  // 0.0, -0.0
     __m128d t6  = _mm_xor_pd(t5, sbithi);      // r, -r
     __m128d t7  = _mm_add_pd(t4,t6);           // n+r, n-r
     __m128d t8  = _mm_sqrt_pd(t7);             // sqrt(n+r), sqrt(n-r)

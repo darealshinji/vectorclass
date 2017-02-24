@@ -1,8 +1,8 @@
 /****************************  vectorf128.h   *******************************
 * Author:        Agner Fog
 * Date created:  2012-05-30
-* Last modified: 2016-12-21
-* Version:       1.26
+* Last modified: 2017-02-19
+* Version:       1.27
 * Project:       vector classes
 * Description:
 * Header file defining floating point vector classes as interface to 
@@ -30,7 +30,7 @@
 *
 * For detailed instructions, see VectorClass.pdf
 *
-* (c) Copyright 2012-2016 GNU General Public License http://www.gnu.org/licenses
+* (c) Copyright 2012-2017 GNU General Public License http://www.gnu.org/licenses
 *****************************************************************************/
 #ifndef VECTORF128_H
 #define VECTORF128_H
@@ -2665,7 +2665,7 @@ static inline Vec2d gather2d(void const * a) {
 *****************************************************************************/
 
 template <int i0, int i1, int i2, int i3>
-static inline void scatter(Vec4f data, float * array) {
+static inline void scatter(Vec4f const & data, float * array) {
 #if defined (__AVX512VL__)
     __m128i indx = constant4i<i0,i1,i2,i3>();
     __mmask16 mask = uint16_t(i0>=0 | (i1>=0)<<1 | (i2>=0)<<2 | (i3>=0)<<3);
@@ -2679,12 +2679,12 @@ static inline void scatter(Vec4f data, float * array) {
 }
 
 template <int i0, int i1>
-static inline void scatter(Vec2d data, double * array) {
+static inline void scatter(Vec2d const & data, double * array) {
     if (i0 >= 0) array[i0] = data[0];
     if (i1 >= 0) array[i1] = data[1];
 }
 
-static inline void scatter(Vec4i index, uint32_t limit, Vec4f data, float * array) {
+static inline void scatter(Vec4i const & index, uint32_t limit, Vec4f const & data, float * array) {
 #if defined (__AVX512VL__)
     __mmask16 mask = _mm_cmplt_epu32_mask(index, Vec4ui(limit));
     _mm_mask_i32scatter_ps(array, mask, index, data, 4);
@@ -2695,12 +2695,12 @@ static inline void scatter(Vec4i index, uint32_t limit, Vec4f data, float * arra
 #endif
 }
 
-static inline void scatter(Vec2q index, uint32_t limit, Vec2d data, double * array) {
+static inline void scatter(Vec2q const & index, uint32_t limit, Vec2d const & data, double * array) {
     if (uint64_t(index[0]) < uint64_t(limit)) array[index[0]] = data[0];
     if (uint64_t(index[1]) < uint64_t(limit)) array[index[1]] = data[1];
 }
 
-static inline void scatter(Vec4i index, uint32_t limit, Vec2d data, double * array) {
+static inline void scatter(Vec4i const & index, uint32_t limit, Vec2d const & data, double * array) {
     if (uint32_t(index[0]) < limit) array[index[0]] = data[0];
     if (uint32_t(index[1]) < limit) array[index[1]] = data[1];
 }

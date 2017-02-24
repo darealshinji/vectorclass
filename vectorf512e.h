@@ -1,8 +1,8 @@
 /****************************  vectorf512.h   *******************************
 * Author:        Agner Fog
 * Date created:  2014-07-23
-* Last modified: 2016-11-16
-* Version:       1.25
+* Last modified: 2017-02-19
+* Version:       1.27
 * Project:       vector classes
 * Description:
 * Header file defining floating point vector classes as interface to intrinsic 
@@ -23,7 +23,7 @@
 *
 * For detailed instructions, see VectorClass.pdf
 *
-* (c) Copyright 2014-2016 GNU General Public License http://www.gnu.org/licenses
+* (c) Copyright 2014-2017 GNU General Public License http://www.gnu.org/licenses
 *****************************************************************************/
 
 // check combination of header files
@@ -2101,7 +2101,7 @@ static inline Vec8d gather8d(void const * a) {
 
 template <int i0, int i1, int i2, int i3, int i4, int i5, int i6, int i7,
     int i8, int i9, int i10, int i11, int i12, int i13, int i14, int i15>
-    static inline void scatter(Vec16f data, float * array) {
+    static inline void scatter(Vec16f const & data, float * array) {
     const int index[16] = {i0,i1,i2,i3,i4,i5,i6,i7,i8,i9,i10,i11,i12,i13,i14,i15};
     for (int i = 0; i < 16; i++) {
         if (index[i] >= 0) array[index[i]] = data[i];
@@ -2109,26 +2109,26 @@ template <int i0, int i1, int i2, int i3, int i4, int i5, int i6, int i7,
 }
 
 template <int i0, int i1, int i2, int i3, int i4, int i5, int i6, int i7>
-static inline void scatter(Vec8d data, double * array) {
+static inline void scatter(Vec8d const & data, double * array) {
     const int index[8] = {i0,i1,i2,i3,i4,i5,i6,i7};
     for (int i = 0; i < 8; i++) {
         if (index[i] >= 0) array[index[i]] = data[i];
     }
 }
 
-static inline void scatter(Vec16i index, uint32_t limit, Vec16f data, float * array) {
+static inline void scatter(Vec16i const & index, uint32_t limit, Vec16f const & data, float * array) {
     for (int i = 0; i < 16; i++) {
         if (uint32_t(index[i]) < limit) array[index[i]] = data[i];
     }
 }
 
-static inline void scatter(Vec8q index, uint32_t limit, Vec8d data, double * array) {
+static inline void scatter(Vec8q const & index, uint32_t limit, Vec8d const & data, double * array) {
     for (int i = 0; i < 8; i++) {
         if (uint64_t(index[i]) < uint64_t(limit)) array[index[i]] = data[i];
     }
 }
 
-static inline void scatter(Vec8i index, uint32_t limit, Vec8d data, double * array) {
+static inline void scatter(Vec8i const & index, uint32_t limit, Vec8d const & data, double * array) {
     for (int i = 0; i < 8; i++) {
         if (uint32_t(index[i]) < limit) array[index[i]] = data[i];
     }
